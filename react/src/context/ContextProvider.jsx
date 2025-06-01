@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 export const GlobalContext = createContext({
     user: null,
@@ -8,7 +8,10 @@ export const GlobalContext = createContext({
 });
 
 export default function GlobalState({ children }) {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({
+        name: "John"
+    });
+    // const [token, _setToken] = useState(123);
     const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
 
     const setToken = (token) => {
@@ -23,3 +26,5 @@ export default function GlobalState({ children }) {
         {children}
     </GlobalContext.Provider>;
 }
+// just a shorthand of using the global context
+// export const useStateContext = () => useContext(GlobalContext);

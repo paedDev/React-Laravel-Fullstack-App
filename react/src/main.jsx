@@ -4,8 +4,11 @@ import './index.css';
 import App from './App.jsx';
 import { RouterProvider } from 'react-router-dom';
 import router from './router.jsx';
+import GlobalState from './context/ContextProvider.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <GlobalState>
+      <RouterProvider router={router} />
+    </GlobalState>
   </StrictMode>,
 );
