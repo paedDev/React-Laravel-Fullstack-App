@@ -8,10 +8,12 @@ const GuestLayout = () => {
         return <Navigate to='/' />;
     }
     return (
-        <>
-            Guest Layout here
+        // <div className='h-screen'>
+        //     <div className='flex justify-center items-center h-full flex-col '>
+        <div>
             <Outlet />
-        </>
+        </div>
+
     );
 };
 

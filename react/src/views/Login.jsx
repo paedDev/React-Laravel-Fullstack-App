@@ -7,11 +7,11 @@ const Login = () => {
     };
     return (
         <div className='h-screen'>
-            <div className='flex justify-center items-center h-full flex-col '>
+            <div className='flex justify-center items-center h-full flex-col fade-in'>
 
                 <form action=" " onSubmit={onSubmit} className='flex flex-col p-10 shadow-2xl  rounded-lg w-[400px] space-y-4'>
                     {/* form title */}
-                    <h1 className='text-center font-bold text-2xl '>Login into your account</h1>
+                    <h1 className='text-center font-bold text-2xl '>Sign Up for free</h1>
                     <input type="email" placeholder='Email' className=' px-6 py-3  rounded shadow border border-black/10 hover:bg-blue-100' />
                     <input
                         type="password"
