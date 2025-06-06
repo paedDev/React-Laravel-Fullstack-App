@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -14,7 +15,7 @@ class AuthController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function login(LoginRequest $request)
+    public function signup(SignupRequest $request)
     {
         $attributes = $request->validated();
 
@@ -24,21 +25,30 @@ class AuthController extends Controller
             'password' => bcrypt($attributes['password']),
         ]);
         $token = $user->createToken('main')->plainTextToken;
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function signup(SignupRequest $request)
+        return response(compact('user', 'token'));
+    }
+    public function login(LoginRequest $request)
     {
-        //
+        $credentialsAttributes = $request->validated();
+
+        if (!Auth::attempt($credentialsAttributes)) {
+            return response([
+                'message' => 'Provided email address or password is incorrect'
+            ], 401); // Optional: add proper HTTP status
+        }
+        /** @var User $user */
+        $user = Auth::user();
+        $token = $user->createToken('main')->plainTextToken;
+
+        return response(compact('user', 'token'));
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function logout(Request $request)
     {
-        //
+        /** @var User $user */
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+        return response(["", 204]);
     }
 }
