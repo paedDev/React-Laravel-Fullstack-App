@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosClient from "../axios-client";
 import { GlobalContext } from "../context/ContextProvider";
@@ -8,6 +8,7 @@ const Signup = () => {
     const passwordRef = useRef();
     const passwordConfirmationRef = useRef();
     const { setUser, setToken } = useContext(GlobalContext);
+    const [errors, setErrors] = useState(null);
     const onSubmit = async (e) => {
         e.preventDefault();
         const payload = {
@@ -16,15 +17,17 @@ const Signup = () => {
             password: passwordRef.current.value,
             password_confirmation: passwordConfirmationRef.current.value,
         };
-
         try {
             const { data } = await axiosClient.post("/signup", payload);
             setUser(data.user);
             setToken(data.token);
         } catch (error) {
             console.log(`Signup failed:`, error);
+            setErrors(error);
         }
+        console.log(payload);
     };
+
     return (
         <div className="h-screen">
             <div className="flex justify-center items-center h-full flex-col  fade-in">
@@ -35,8 +38,15 @@ const Signup = () => {
                 >
                     {/* form title */}
                     <h1 className="text-center font-bold text-2xl ">
-                        Login into your account
+                        Sign Up for Free
                     </h1>
+                    {errors && (
+                        <div className="">
+                            {Object.keys(errors).map((key) => (
+                                <p key={key}>{errors[key][0]}</p>
+                            ))}
+                        </div>
+                    )}
                     <input
                         ref={nameRef}
                         type="text"
@@ -62,8 +72,11 @@ const Signup = () => {
                         className="px-6 py-3 rounded shadow border border-black/10 hover:bg-blue-100"
                     />
 
-                    <button className=" bg-violet-700 py-3 rounded-lg text-white font-bold hover:bg-violet-800 hover:text-violet-100">
-                        Sign Up
+                    <button className="relative border-violet-800 border-2 text-black py-3 rounded-lg  font-bold  overflow-hidden group cursor-pointer">
+                        <span className="absolute inset-0 bg-violet-700 translate-x-[-100%] group-hover:translate-x-0 rounded-lg transition duration-500"></span>
+                        <span className="z-10 relative text-violet-800 group-hover:text-violet-200 transition-colors duration-400">
+                            Sign Up
+                        </span>
                     </button>
                     <p className="text-center text-gray-400">
                         Already Registered?
