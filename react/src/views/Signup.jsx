@@ -22,8 +22,15 @@ const Signup = () => {
             setUser(data.user);
             setToken(data.token);
         } catch (error) {
-            console.log(`Signup failed:`, error);
-            setErrors(error);
+            if (error.response && error.response.data) {
+                setErrors(error.response || error.response.data);
+            } else {
+                setErrors({
+                    general: [
+                        "Connection failed. Please check if the server is running.",
+                    ],
+                });
+            }
         }
         console.log(payload);
     };
@@ -41,7 +48,7 @@ const Signup = () => {
                         Sign Up for Free
                     </h1>
                     {errors && (
-                        <div className="">
+                        <div className="text-red-500 text-sm">
                             {Object.keys(errors).map((key) => (
                                 <p key={key}>{errors[key][0]}</p>
                             ))}

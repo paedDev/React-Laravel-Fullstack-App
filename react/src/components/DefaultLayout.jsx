@@ -13,14 +13,16 @@ const DefaultLayout = () => {
         e.preventDefault();
     };
     return (
-        <div className="flex  w-8xl mx-auto min-h-screen font-hanken  ">
+        <div className="flex  w-8xl mx-auto min-h-screen font-hanken fade-in ">
             <aside className=" w-80 flex flex-col items-start gap-4 bg-purple-700 px-2 pt-4  text-white font-bold">
                 <Link
                     to="/dashboard"
-                    className="hover:bg-black/20 transtion duration-500 transform hover:translate-x-2.5 w-full py-2 px-6 rounded-lg"
+                    className="relative w-full py-2 px-6 rounded-lg cursor-pointer group text-white/80 "
                 >
-                    {" "}
-                    Dashboard
+                    <span className="absolute inset-0 bg-black/20 rounded-lg translate-x-[-120%]  group-hover:translate-x-0 transition-transform duration-500 "></span>
+                    <span className="z-10 relative group-hover:text-white transtion-colors duration-500 ">
+                        Dashboard
+                    </span>
                 </Link>
                 <Link
                     to="/users"

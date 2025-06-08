@@ -1,9 +1,32 @@
-import React from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { GlobalContext } from "../context/ContextProvider";
+import axiosClient from "../axios-client";
 
 const Login = () => {
-    const onSubmit = (e) => {
+    const emailRef = useRef();
+    const passwordRef = useRef();
+    const { setUser, setToken } = useContext(GlobalContext);
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState(null);
+    const onSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
+        const payload = {
+            email: emailRef.current.value,
+            password: passwordRef.current.value,
+        };
+        try {
+            const { data } = await axiosClient.post("/login", payload);
+            console.log("Login rsponse", data);
+            setUser(data.user);
+            setToken(data.token);
+            setErrors(null);
+        } catch (error) {
+            console.log("Login Error:", error);
+            setLoading(false);
+        }
+        console.log(payload);
     };
     return (
         <div className="h-screen">
@@ -17,12 +40,14 @@ const Login = () => {
                     <h1 className="text-center font-bold text-2xl ">
                         Login into your account
                     </h1>
-                    <inpu
+                    <input
                         type="email"
+                        ref={emailRef}
                         placeholder="Email"
                         className=" px-6 py-3  rounded shadow border border-black/10 hover:bg-blue-100"
                     />
                     <input
+                        ref={passwordRef}
                         type="password"
                         placeholder="Password"
                         className="px-6 py-3 rounded shadow border border-black/10 hover:bg-blue-100"
