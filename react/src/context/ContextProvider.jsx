@@ -3,13 +3,13 @@ import { createContext, useContext, useState } from "react";
 export const GlobalContext = createContext({
     user: null,
     token: null,
-    setUser: () => {},
-    setToken: () => {},
+    setUser: () => { },
+    setToken: () => { },
 });
 
 export default function GlobalState({ children }) {
     const [user, setUser] = useState({
-        name: "John",
+        name: "Jan Noel",
     });
     // const [token, _setToken] = useState(123);
     const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));

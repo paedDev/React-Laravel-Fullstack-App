@@ -9,7 +9,9 @@ const Signup = () => {
     const passwordConfirmationRef = useRef();
     const { setUser, setToken } = useContext(GlobalContext);
     const [errors, setErrors] = useState(null);
+    const [loading, setLoading] = useState(false);
     const onSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
         const payload = {
             name: nameRef.current.value,
@@ -21,9 +23,10 @@ const Signup = () => {
             const { data } = await axiosClient.post("/signup", payload);
             setUser(data.user);
             setToken(data.token);
+            setErrors(null);
         } catch (error) {
             if (error.response && error.response.data) {
-                setErrors(error.response || error.response.data);
+                setErrors(error.response.data.errors);
             } else {
                 setErrors({
                     general: [
@@ -31,8 +34,16 @@ const Signup = () => {
                     ],
                 });
             }
+        } finally {
+            setLoading(false);
         }
         console.log(payload);
+
+    };
+    const getError = (field) => {
+        if (!errors || !errors[field]) return null;
+        return Array.isArray(errors[field] ? errors[field][0] : errors[field]);
+
     };
 
     return (
@@ -47,19 +58,26 @@ const Signup = () => {
                     <h1 className="text-center font-bold text-2xl ">
                         Sign Up for Free
                     </h1>
-                    {errors && (
-                        <div className="text-red-500 text-sm">
-                            {Object.keys(errors).map((key) => (
-                                <p key={key}>{errors[key][0]}</p>
-                            ))}
+                    {/* Looping the error */}
+                    {/* {errors && (
+                        <div className="text-white text-sm w-full bg-red-400 p-5 rounded-xl">
+                            {Object.keys(errors).map((key) => {
+                                const error = errors[key];
+                                return error ? (
+                                    <p key={key}>{error}</p>
+                                ) : null;
+                            })}
                         </div>
-                    )}
+                    )} */}
                     <input
                         ref={nameRef}
                         type="text"
                         placeholder="Full Name"
                         className=" px-6 py-3  rounded shadow border border-black/10 hover:bg-blue-100"
                     />
+                    {getError('name') && (
+                        <p className="text-red-500 text-sm">{getError('name')}</p>   // ✅ shows 'name' error for 'name' field
+                    )}
                     <input
                         ref={emailRef}
                         type="email"
@@ -89,7 +107,7 @@ const Signup = () => {
                         Already Registered?
                         <Link to="/login" className="text-violet-600 font-bold">
                             {" "}
-                            Sign in
+                            Log in
                         </Link>
                     </p>
                 </form>

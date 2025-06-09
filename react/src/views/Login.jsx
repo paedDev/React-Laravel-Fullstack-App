@@ -18,15 +18,24 @@ const Login = () => {
         };
         try {
             const { data } = await axiosClient.post("/login", payload);
-            console.log("Login rsponse", data);
+            console.log("Login response", data);
             setUser(data.user);
             setToken(data.token);
             setErrors(null);
         } catch (error) {
+            if (error.response && error.response.data) {
+                setErrors(error.response.data.errors);
+            }
             console.log("Login Error:", error);
+
+        } finally {
             setLoading(false);
         }
         console.log(payload);
+    };
+    const getError = (field) => {
+        if (!errors || !errors[field]) return null;
+        return Array.isArray(errors[field]) ? errors[field][0] : errors[field];
     };
     return (
         <div className="h-screen">
@@ -40,18 +49,30 @@ const Login = () => {
                     <h1 className="text-center font-bold text-2xl ">
                         Login into your account
                     </h1>
+                    {/* {errors && (
+                        <div className="text-red-500 text-sm w-full">
+                            {Object.keys(errors).map((key) => (
+                                <p key={key}>{errors[key]}</p>
+                            ))}
+                        </div>)} */}
                     <input
                         type="email"
                         ref={emailRef}
                         placeholder="Email"
                         className=" px-6 py-3  rounded shadow border border-black/10 hover:bg-blue-100"
                     />
+                    {getError('email') && (
+                        <p className="text-red-500 text-sm">{getError('email')}</p>
+                    )}
                     <input
                         ref={passwordRef}
                         type="password"
                         placeholder="Password"
                         className="px-6 py-3 rounded shadow border border-black/10 hover:bg-blue-100"
                     />
+                    {getError('password') && (
+                        <p className="text-red-500 text-sm">{getError('password')}</p>
+                    )}
 
                     <button className="relative py-3 rounded-lg text-violet-700 font-bold border border-violet-600 group overflow-hidden">
                         <span className="absolute bg-violet-700 inset-0 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-400"></span>
