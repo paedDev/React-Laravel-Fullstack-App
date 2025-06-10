@@ -34,7 +34,8 @@ class AuthController extends Controller
 
         if (!Auth::attempt($credentialsAttributes)) {
             return response([
-                'message' => 'Provided email address or password is incorrect'
+                'message' => 'Provided email address is incorrect',
+                'passwordMessage' => 'Provided password is incorrect'
             ], 401); // Optional: add proper HTTP status
         }
         /** @var User $user */

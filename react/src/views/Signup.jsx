@@ -27,12 +27,6 @@ const Signup = () => {
         } catch (error) {
             if (error.response && error.response.data) {
                 setErrors(error.response.data.errors);
-            } else {
-                setErrors({
-                    general: [
-                        "Connection failed. Please check if the server is running.",
-                    ],
-                });
             }
         } finally {
             setLoading(false);
@@ -42,8 +36,7 @@ const Signup = () => {
     };
     const getError = (field) => {
         if (!errors || !errors[field]) return null;
-        return Array.isArray(errors[field] ? errors[field][0] : errors[field]);
-
+        return Array.isArray(errors[field]) ? errors[field][0] : errors[field];
     };
 
     return (
@@ -52,7 +45,7 @@ const Signup = () => {
                 <form
                     action=" "
                     onSubmit={onSubmit}
-                    className="flex flex-col p-10 shadow-2xl  rounded-lg w-[400px] space-y-4"
+                    className="flex flex-col p-10 shadow-2xl  rounded-lg w-[400px] space-y-3"
                 >
                     {/* form title */}
                     <h1 className="text-center font-bold text-2xl ">
@@ -84,12 +77,20 @@ const Signup = () => {
                         placeholder="Email Address"
                         className=" px-6 py-3  rounded shadow border border-black/10 hover:bg-blue-100"
                     />
+                    {
+                        getError('email') && (
+                            <p className="text-red-500 text-sm">{getError('email')}</p>
+                        )
+                    }
                     <input
                         ref={passwordRef}
                         type="password"
                         placeholder="Password"
                         className="px-6 py-3 rounded shadow border border-black/10 hover:bg-blue-100"
                     />
+                    {getError('password') && (
+                        <p className="text-red-600 text-sm">{getError('password')}</p>
+                    )}
                     <input
                         ref={passwordConfirmationRef}
                         type="password"

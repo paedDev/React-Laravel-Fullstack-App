@@ -16,15 +16,24 @@ const Login = () => {
             email: emailRef.current.value,
             password: passwordRef.current.value,
         };
+        setErrors(null);
         try {
             const { data } = await axiosClient.post("/login", payload);
             console.log("Login response", data);
             setUser(data.user);
             setToken(data.token);
-            setErrors(null);
+
         } catch (error) {
+
             if (error.response && error.response.data) {
-                setErrors(error.response.data.errors);
+                if (error.response.data.errors) {
+                    setErrors(error.response.data.errors);
+                } else if (error.response.data.message) {
+                    setErrors({
+                        email: [error.response.data.message],
+                        password: [error.response.data.passwordMessage]
+                    });
+                }
             }
             console.log("Login Error:", error);
 
