@@ -7,7 +7,6 @@ export const GlobalContext = createContext({
     setToken: () => { },
     theme: 'light',
     toggleTheme: () => {
-
     }
 });
 
