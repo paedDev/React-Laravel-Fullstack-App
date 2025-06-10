@@ -45,7 +45,7 @@ const DefaultLayout = () => {
         loading ?
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-xl">
-                    Please wait ...
+                    Please wait ....
                 </div>
             </div> :
             (
