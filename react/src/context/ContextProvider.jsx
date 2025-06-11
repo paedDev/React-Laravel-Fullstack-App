@@ -17,7 +17,7 @@ export default function GlobalState({ children }) {
     const [theme, setTheme] = useState(localStorage.getItem('theme' || 'light'));
     // const [token, _setToken] = useState(123);
     const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));
-
+    const [loading, setLoading] = useState(false);
     const toggleTheme = () => {
         setTheme(t => (t === "light" ? 'dark' : 'light'));
     };
@@ -34,7 +34,7 @@ export default function GlobalState({ children }) {
         }
     };
     return (
-        <GlobalContext.Provider value={{ user, token, setUser, setToken, theme, toggleTheme }}>
+        <GlobalContext.Provider value={{ user, token, setUser, setToken, theme, toggleTheme, loading, setLoading }}>
             {children}
         </GlobalContext.Provider>
     );

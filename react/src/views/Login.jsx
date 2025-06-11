@@ -1,9 +1,10 @@
 import React, { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../context/ContextProvider";
 import axiosClient from "../axios-client";
 
 const Login = () => {
+    const navigate = useNavigate();
     const emailRef = useRef();
     const passwordRef = useRef();
     const { setUser, setToken } = useContext(GlobalContext);
@@ -22,7 +23,9 @@ const Login = () => {
             console.log("Login response", data);
             setUser(data.user);
             setToken(data.token);
-
+            setTimeout(() => {
+                navigate('/users');
+            }, 3000);
         } catch (error) {
 
             if (error.response && error.response.data) {
@@ -58,6 +61,13 @@ const Login = () => {
                     <h1 className="text-center font-bold text-2xl ">
                         Login into your account
                     </h1>
+                    {
+                        loading && (
+                            <div className="bg-green-400 text-white p-3">
+                                Redirecting to home page...
+                            </div>
+                        )
+                    }
                     {/* {errors && (
                         <div className="text-red-500 text-sm w-full">
                             {Object.keys(errors).map((key) => (

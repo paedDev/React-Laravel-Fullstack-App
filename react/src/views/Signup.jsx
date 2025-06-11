@@ -1,8 +1,9 @@
 import React, { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../axios-client";
 import { GlobalContext } from "../context/ContextProvider";
 const Signup = () => {
+    const navigate = useNavigate();
     const nameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -21,9 +22,12 @@ const Signup = () => {
         };
         try {
             const { data } = await axiosClient.post("/signup", payload);
-            setUser(data.user);
-            setToken(data.token);
+
             setErrors(null);
+
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } catch (error) {
             if (error.response && error.response.data) {
                 setErrors(error.response.data.errors);
@@ -51,6 +55,11 @@ const Signup = () => {
                     <h1 className="text-center font-bold text-2xl ">
                         Sign Up for Free
                     </h1>
+                    {loading && (
+                        <div className="text-white text-sm w-full bg-green-400 p-3 rounded-xl text-center">
+                            Creating account... Redirecting to login!
+                        </div>
+                    )}
                     {/* Looping the error */}
                     {/* {errors && (
                         <div className="text-white text-sm w-full bg-red-400 p-5 rounded-xl">
@@ -98,7 +107,7 @@ const Signup = () => {
                         className="px-6 py-3 rounded shadow border border-black/10 hover:bg-blue-100"
                     />
 
-                    <button className="relative border-violet-800 border-2 text-black py-3 rounded-lg  font-bold  overflow-hidden group cursor-pointer">
+                    <button disabled={loading} type="submit" className="relative border-violet-800 border-2 text-black py-3 rounded-lg  font-bold  overflow-hidden group cursor-pointer">
                         <span className="absolute inset-0 bg-violet-700 translate-x-[-100%] group-hover:translate-x-0 rounded-lg transition duration-500"></span>
                         <span className="z-10 relative text-violet-800 group-hover:text-violet-200 transition-colors duration-400">
                             Sign Up
@@ -113,7 +122,7 @@ const Signup = () => {
                     </p>
                 </form>
             </div>
-        </div>
+        </div >
     );
 };
 
