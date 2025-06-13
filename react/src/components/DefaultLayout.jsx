@@ -55,21 +55,16 @@ const DefaultLayout = () => {
                             to="/dashboard"
                             className="relative w-full py-2 px-6 rounded-lg cursor-pointer group "
                         >
-                            <span className="absolute inset-0 bg-black/80 rounded-lg translate-x-[-120%]  group-hover:translate-x-0 transition-transform duration-500 "></span>
-                            <span className="z-10 relative group-hover:text-white transtion-colors duration-500 ">
+                            <span className={`absolute inset-0 ${theme === 'dark' ? ' bg-white/80 ' : ' bg-black/80'} rounded-lg translate-x-[-120%]  group-hover:translate-x-0 transition-transform duration-500 `}></span>
+                            <span className={`z-10 relative  transtion-colors duration-500 ${theme === 'dark' ? 'group-hover:text-black' : 'group-hover:text-white'}`}>
                                 Dashboard
                             </span>
                         </Link>
+
                         {
-                            theme === "dark" ? <Link
+                            <Link
                                 to="/users"
-                                className="hover:bg-white/80 transtion duration-500 w-full py-2 px-6 rounded-lg hover:translate-x-2.5 hover:text-black "
-                            >
-                                {" "}
-                                Users
-                            </Link> : <Link
-                                to="/users"
-                                className="hover:bg-black/80 transtion duration-500 w-full py-2 px-6 rounded-lg hover:translate-x-2.5 hover:text-white "
+                                className={`hover:bg-black/80 transtion duration-500 w-full py-2 px-6 rounded-lg hover:translate-x-2.5  ${theme === 'dark' ? "hover:text-black hover:bg-white/80" : 'hover:bg-black/80  hover:text-white'} `}
                             >
                                 {" "}
                                 Users
@@ -77,7 +72,7 @@ const DefaultLayout = () => {
                         }
                     </aside>
                     <div className="w-full  ">
-                        <header className="flex justify-between h-20 border-b border-black/30 shadow-xl items-center p-10">
+                        <header className={`flex justify-between h-20 border-b shadow-xl items-center p-10 ${theme === 'dark' ? 'border-white/70' : 'border-gray-300'}`}>
                             <div>Header</div>
                             <div className="flex space-x-4 items-center">
                                 <h2> {loading ? "loading..." : user?.name}</h2>

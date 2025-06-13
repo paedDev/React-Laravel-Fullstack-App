@@ -17,12 +17,7 @@ class UserController extends Controller
         // return UserResource::collection(User::latest()->simplePaginate(10));
         $users = User::select('id', 'name', 'email', 'created_at')->latest()->simplePaginate(10);
         return response([
-            'users' => $users->items(),
-            'pagination' => [
-                'current_page' => $users->currentPage(),
-                'per_page' => $users->perPage(),
-                'has_more' => $users->hasMorePages(),
-            ]
+            'users' => $users,
         ]);
     }
     /**
@@ -77,15 +72,20 @@ class UserController extends Controller
 
         return response([
             'message' => "User updated successfully",
-            ''
+            'data' => $user
         ], 201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
+
     {
-        //
+        $user->delete();
+
+        return response([
+            'message' => 'User deleted successfully'
+        ], 204);
     }
 }
