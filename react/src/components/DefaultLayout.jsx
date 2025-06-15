@@ -24,7 +24,7 @@ const DefaultLayout = () => {
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const res = await axiosClient.get('/users');
+            const res = await axiosClient.get('/user');
             setUser(res.data);
         } catch (error) {
             console.error("Error fetch users:", error);
@@ -74,8 +74,8 @@ const DefaultLayout = () => {
                     <div className="w-full  ">
                         <header className={`flex justify-between h-20 border-b shadow-xl items-center p-10 ${theme === 'dark' ? 'border-white/70' : 'border-gray-300'}`}>
                             <div>Header</div>
-                            <div className="flex space-x-4 items-center">
-                                <h2> {loading ? "loading..." : user?.name}</h2>
+                            <div className="flex space-x-6 items-center">
+                                <h2> {loading ? "loading..." : `Hello ` + user?.name}</h2>
                                 <IoLogOutOutline size={30} width={30} height={30} className="text-center cursor-pointer " onClick={onLogout} />
                                 <div className="flex items-center">
                                     <button onClick={toggleTheme}>

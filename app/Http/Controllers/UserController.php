@@ -57,23 +57,24 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $attributes = $request->validated([
+        $attributes = $request->validate([
             'name' => [
                 'required',
                 'string',
             ],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Password::min(8)]
+            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'confirmed', Password::min(8)]
         ]);
         if (isset($attributes['password'])) {
             $attributes['password'] = bcrypt($attributes['password']);
+            unset($attributes['password_confirmation']);
         }
         $user->update($attributes);
 
         return response([
             'message' => "User updated successfully",
             'data' => $user
-        ], 201);
+        ], 200);
     }
 
     /**

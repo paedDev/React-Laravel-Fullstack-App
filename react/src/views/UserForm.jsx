@@ -21,7 +21,11 @@ const UserForm = () => {
     try {
       const res = await axiosClient.get(`/users/${id}`);
 
-      setUser(res.data.data);
+      setUser({
+        ...res.data.data,
+        password: '',
+        password_confirmation: ''
+      });
     } catch (err) {
       console.log(err);
     } finally {
@@ -40,20 +44,26 @@ const UserForm = () => {
     setErrors(null);
     try {
       let response;
+      let userData = { ...user };
       if (user.id) {
-        response = await axiosClient.put(`/users/${user.id}`, user);
+        if (!userData.password || userData.password.trim() === '') {
+          delete userData.password;
+          delete userData.password_confirmation;
+        }
+        response = await axiosClient.put(`/users/${user.id}`, userData);
         setTimeout(() => {
           navigate('/users');
         }, 3000);
       } else {
-        response = await axiosClient.post('/users', user);
-        setTimeout(() => {
-          navigate('/users');
-        }, 3000);
+        response = await axiosClient.post('/users', userData);
+        navigate("/users");
       }
     } catch (error) {
-      if (error.response.data.errors) {
+      console.log('Error response:', error.response);
+      if (error.response && error.response.data && error.response.data) {
         setErrors(error.response.data.errors);
+      } else {
+        setErrors({ general: ['An error occured while saving the user'] });
       }
     } finally {
       setLoading(false);
@@ -91,6 +101,11 @@ const UserForm = () => {
       {
         !loading &&
         <form action="" onSubmit={handleSubmit} className='space-y-4 bg-gray-300/20 p-4 rounded-xl w-[90%] mx-auto h-auto'>
+          {
+            getError('general') && (
+              <p className='bg-red-100 border border-red-400 text-red-600 px-4 py-3 rounded'>{getError('general')}</p>
+            )
+          }
           <div>
             <label htmlFor="name" className='block text-sm font-medium'>Name</label>
             <input type="text"
@@ -120,7 +135,7 @@ const UserForm = () => {
             }
           </div>
           <div>
-            <label htmlFor="password" className='block text-sm font-medium'>Password</label>
+            <label htmlFor="password" className='block text-sm font-medium'>Password  {user.id && <span className='text-gray-500 text-xs'>(leave blank to keep current password)</span>}</label>
             <input type="password"
               name='password'
               value={user.password || ''}
